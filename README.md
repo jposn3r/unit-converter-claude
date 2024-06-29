@@ -14,7 +14,7 @@ try it here! https://main.d1np4bfv7kq4kn.amplifyapp.com/
 
 ## How to Use
 
-### Embedding the Widget
+### Embedding the Widget - WORK IN PROGRESS, not hosted yet
 
 To embed this unit converter widget in your project, follow these steps:
 
