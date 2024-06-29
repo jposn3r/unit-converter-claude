@@ -2,6 +2,8 @@
 
 A lightweight, customizable unit converter widget that can be easily embedded into any web project. This widget supports conversions for length, weight, and temperature units.
 
+try it here! https://main.d1np4bfv7kq4kn.amplifyapp.com/
+
 ## Features
 
 - Convert between various units of length, weight, and temperature
