@@ -22,3 +22,12 @@ To embed this unit converter widget in your project, follow these steps:
 
 ```html
 <script src="https://path-to-your-hosted-script/unit-converter-widget.js"></script>
+```
+
+2. Add a container element where you want the widget to appear:
+   
+```html
+<div id="unit-converter-widget"></div>
+```
+
+
