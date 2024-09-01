@@ -14,16 +14,8 @@
             <select id="toUnit"></select>
             <button id="convertButton">Convert</button>
             <div id="result-container">
-                <span id="result"></span>
-                <button id="copy-button" class="copy-button" title="Copy result">
-                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                </button>
+                <div id="result"></div>
+                <button id="copy-button" class="copy-button" title="Copy result">Copy</button>
             </div>
         </div>
         <div id="conversion-history">
@@ -219,7 +211,7 @@
     function initializeCopyToClipboard() {
         const copyButton = document.getElementById('copy-button');
         const resultElement = document.getElementById('result');
-
+    
         copyButton.addEventListener('click', function() {
             const resultText = resultElement.textContent;
             const match = resultText.match(/=\s*([\d.]+)/);
@@ -227,8 +219,12 @@
             if (match && match[1]) {
                 const numericalValue = match[1];
                 navigator.clipboard.writeText(numericalValue).then(function() {
-                    showCheckIcon();
-                    setTimeout(showCopyIcon, 1500);
+                    // Visual feedback
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                    }, 1500);
                 }).catch(function(err) {
                     console.error('Failed to copy text: ', err);
                 });
