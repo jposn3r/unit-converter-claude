@@ -6,7 +6,7 @@ try it here! https://main.d1np4bfv7kq4kn.amplifyapp.com/
 
 ## Features
 
-- Convert between various units of length, weight, and temperature
+- Convert between various units of length, weight, temperature, time and speed
 - Clean, responsive design
 - Easy to embed in any web project
 - Copy results with a single click
