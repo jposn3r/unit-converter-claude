@@ -4,94 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unit Converter Widget</title>
-    <style>
-        .unit-converter {
-            font-family: Arial, sans-serif;
-            max-width: 300px;
-            margin: 0 auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .unit-converter select {
-            width: 100%;
-            padding: 5px;
-            margin: 5px 0;
-        }
-        .unit-converter input {
-            width: 95.5%;
-            padding: 5px;
-        }
-        .unit-converter button {
-            width: 100%;
-            padding: 5px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .unit-converter button:hover {
-            background-color: #0056b3;
-        }
-        #result-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        #result {
-            display: inline-block;
-            margin: 0;
-            padding-right: 5px;
-        }
-
-        .copy-button {
-            display: none;  /* Hide by default */
-            align-items: center;
-            justify-content: center;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            padding: 4px;
-            margin-left: 5px;
-            max-width: 25px;
-        }
-
-        .copy-button:hover {
-            background-color: #0056b3;
-        }
-
-        .copy-button svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .check-icon {
-            display: none;
-        }
-
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="unit-converter">
+    <div id="unit-converter">
         <h2>Unit Converter</h2>
         <select id="unitType">
             <option value="length">Length</option>
             <option value="weight">Weight</option>
             <option value="temperature">Temperature</option>
+            <option value="time">Time</option>
+            <option value="speed">Speed</option>
         </select>
         <input type="number" id="inputValue" placeholder="Enter value">
         <select id="fromUnit"></select>
         <select id="toUnit"></select>
-        <button onclick="convert()">Convert</button>
+        <button id="convertButton">Convert</button>
         <div id="result-container">
             <span id="result"></span>
             <button id="copy-button" class="copy-button" title="Copy result">
@@ -105,145 +33,11 @@
             </button>
         </div>
     </div>
+    <div id="conversion-history">
+        <h3>Recent Conversions</h3>
+        <ul id="history-list"></ul>
+    </div>
 
-    <script>
-        // Inject widget HTML
-        var targetElement = document.getElementById('unit-converter-widget');
-        if (targetElement) {
-            targetElement.innerHTML = widgetHTML;
-            initializeCopyToClipboard();
-        }
-
-        const unitData = {
-            length: {
-                units: ['meters', 'feet', 'inches', 'centimeters'],
-                conversions: {
-                    meters: { feet: 3.28084, inches: 39.3701, centimeters: 100 },
-                    feet: { meters: 0.3048, inches: 12, centimeters: 30.48 },
-                    inches: { meters: 0.0254, feet: 0.0833333, centimeters: 2.54 },
-                    centimeters: { meters: 0.01, feet: 0.0328084, inches: 0.393701 }
-                }
-            },
-            weight: {
-                units: ['kilograms', 'pounds', 'ounces', 'grams'],
-                conversions: {
-                    kilograms: { pounds: 2.20462, ounces: 35.274, grams: 1000 },
-                    pounds: { kilograms: 0.453592, ounces: 16, grams: 453.592 },
-                    ounces: { kilograms: 0.0283495, pounds: 0.0625, grams: 28.3495 },
-                    grams: { kilograms: 0.001, pounds: 0.00220462, ounces: 0.035274 }
-                }
-            },
-            temperature: {
-                units: ['Celsius', 'Fahrenheit', 'Kelvin'],
-                conversions: {
-                    Celsius: {
-                        Fahrenheit: (c) => c * 9/5 + 32,
-                        Kelvin: (c) => c + 273.15
-                    },
-                    Fahrenheit: {
-                        Celsius: (f) => (f - 32) * 5/9,
-                        Kelvin: (f) => (f - 32) * 5/9 + 273.15
-                    },
-                    Kelvin: {
-                        Celsius: (k) => k - 273.15,
-                        Fahrenheit: (k) => (k - 273.15) * 9/5 + 32
-                    }
-                }
-            }
-        };
-
-        function populateUnitSelects() {
-            const unitType = document.getElementById('unitType').value;
-            const fromUnit = document.getElementById('fromUnit');
-            const toUnit = document.getElementById('toUnit');
-            
-            fromUnit.innerHTML = '';
-            toUnit.innerHTML = '';
-
-            unitData[unitType].units.forEach(unit => {
-                fromUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
-                toUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
-            });
-        }
-
-        document.getElementById('unitType').addEventListener('change', populateUnitSelects);
-        populateUnitSelects();
-
-        function convert() {
-            const unitType = document.getElementById('unitType').value;
-            const inputValue = parseFloat(document.getElementById('inputValue').value);
-            const fromUnit = document.getElementById('fromUnit').value;
-            const toUnit = document.getElementById('toUnit').value;
-
-            const resultElement = document.getElementById('result');
-            const copyButton = document.getElementById('copy-button');
-
-            if (isNaN(inputValue)) {
-                resultElement.textContent = 'Please enter a valid number';
-                copyButton.style.display = 'none';
-                return;
-            }
-
-            let result;
-            if (unitType === 'temperature') {
-                if (fromUnit === toUnit) {
-                    result = inputValue;
-                } else {
-                    result = unitData[unitType].conversions[fromUnit][toUnit](inputValue);
-                }
-            } else {
-                if (fromUnit === toUnit) {
-                    result = inputValue;
-                } else {
-                    result = inputValue * unitData[unitType].conversions[fromUnit][toUnit];
-                }
-            }
-
-            const resultText = `${inputValue} ${fromUnit} = ${result.toFixed(2)} ${toUnit}`;
-            resultElement.textContent = resultText;
-            copyButton.style.display = 'inline-flex';
-            showCopyIcon(); // Show copy icon when a new result is generated
-
-        }
-
-        function initializeCopyToClipboard() {
-            const copyButton = document.getElementById('copy-button');
-            const resultElement = document.getElementById('result');
-
-            copyButton.addEventListener('click', function () {
-                const resultText = resultElement.textContent;
-                const match = resultText.match(/=\s*([\d.]+)/);
-
-                if (match && match[1]) {
-                    const numericalValue = match[1];
-                    navigator.clipboard.writeText(numericalValue).then(function () {
-                        showCheckIcon();
-                        setTimeout(showCopyIcon, 1500); // Switch back to copy icon after 1.5 seconds
-                    }).catch(function (err) {
-                        console.error('Failed to copy text: ', err);
-                    });
-                } else {
-                    console.error('No numerical value found in the result');
-                }
-            });
-        }
-
-        function showCopyIcon() {
-            const copyIcon = document.querySelector('.copy-icon');
-            const checkIcon = document.querySelector('.check-icon');
-            copyIcon.style.display = 'inline';
-            checkIcon.style.display = 'none';
-        }
-
-        function showCheckIcon() {
-            const copyIcon = document.querySelector('.copy-icon');
-            const checkIcon = document.querySelector('.check-icon');
-            copyIcon.style.display = 'none';
-            checkIcon.style.display = 'inline';
-        }
-
-        // Make sure to call initializeCopyToClipboard after the DOM is loaded
-        document.addEventListener('DOMContentLoaded', initializeCopyToClipboard);
-    </script>
+    <script src="unit-converter-widget.js"></script>
 </body>
 </html>
