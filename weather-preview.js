@@ -1,16 +1,18 @@
 const PREVIEW_API_KEY = 'c0da814d1fed7b22311fb7cb0c56b639';
 const PREVIEW_DEFAULT_CITY = 'New York';
+let previewUnit = localStorage.getItem('temperatureUnit') || 'imperial';
+let previewCity = localStorage.getItem('currentCity') || PREVIEW_DEFAULT_CITY;
 
 document.addEventListener('DOMContentLoaded', () => {
     const weatherPreview = document.getElementById('weather-preview');
     if (weatherPreview) {
-        fetchWeatherPreview(PREVIEW_DEFAULT_CITY);
+        fetchWeatherPreview(previewCity);
     }
 });
 
 async function fetchWeatherPreview(city) {
     try {
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${PREVIEW_API_KEY}&units=imperial`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${PREVIEW_API_KEY}&units=${previewUnit}`);
         const data = await response.json();
         
         updateWeatherPreview(data);
@@ -21,11 +23,13 @@ async function fetchWeatherPreview(city) {
 
 function updateWeatherPreview(data) {
     const weatherPreview = document.getElementById('weather-preview');
-    weatherPreview.innerHTML = `
-        <div class="preview-icon">${getWeatherIcon(data.weather[0].icon)}</div>
-        <div class="preview-temp">${Math.round(data.main.temp)}°C</div>
-        <div class="preview-city">${data.name}</div>
-    `;
+    if (weatherPreview) {
+        weatherPreview.innerHTML = `
+            <div class="preview-location">${data.name}, ${data.sys.country}</div>
+            <div class="preview-icon">${getWeatherIcon(data.weather[0].icon)}</div>
+            <div class="preview-temp">${Math.round(data.main.temp)}°${previewUnit === 'imperial' ? 'F' : 'C'}</div>
+        `;
+    }
 }
 
 function getWeatherIcon(iconCode) {
@@ -39,3 +43,6 @@ function getWeatherIcon(iconCode) {
 
     return iconMap[iconCode] || '❓';
 }
+
+// Make updateWeatherPreview available globally
+window.updateWeatherPreview = updateWeatherPreview;
