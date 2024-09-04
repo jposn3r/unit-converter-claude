@@ -10,7 +10,7 @@ export default class WeatherWidget {
     async mount() {
         this.container.innerHTML = `
             <div id="weather-visualizer">
-                <h2>Weather Visualizer</h2>
+                <h2>Weather</h2>
                 <div id="location-input">
                     <input type="text" id="city-input" placeholder="Enter city name">
                     <button id="search-button">Search</button>
