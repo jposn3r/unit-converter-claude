@@ -12,11 +12,30 @@ document.addEventListener('DOMContentLoaded', () => {
     unitSwitch.checked = currentUnit === 'metric';
     unitLabel.textContent = currentUnit === 'metric' ? '°C' : '°F';
 
-    searchButton.addEventListener('click', () => {
+    // Function to handle search
+    const handleSearch = () => {
         const city = cityInput.value || DEFAULT_CITY;
         currentCity = city;
         localStorage.setItem('currentCity', city);
-        fetchWeatherData(city);
+        fetchWeatherData(city)
+            .then(() => {
+                // Clear the input field after successful search
+                cityInput.value = '';
+            })
+            .catch((error) => {
+                console.error('Error in handleSearch:', error);
+            });
+    };
+
+    // Event listener for search button click
+    searchButton.addEventListener('click', handleSearch);
+
+    // Event listener for Enter key press in the input field
+    cityInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent form submission if within a form
+            handleSearch();
+        }
     });
 
     unitSwitch.addEventListener('change', () => {
@@ -46,6 +65,7 @@ async function fetchWeatherData(city) {
         }
     } catch (error) {
         console.error('Error fetching weather data:', error);
+        throw error; // Re-throw the error to be caught in handleSearch
     }
 }
 
