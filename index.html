@@ -5,29 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI-Powered Widgets</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="widgets/weather/weather-visualizer.css">
 </head>
 <body>
-    <h1>AI-Powered Widgets</h1>
-    <div class="grid">
-        <div class="tile" data-widget="unit-converter">
-            <h2>Unit Converter</h2>
-            <p>Convert between various units of measurement</p>
-        </div>
-        <div class="tile" data-widget="password-generator">
-            <h2>Password Generator</h2>
-            <p>Generate secure random passwords</p>
-        </div>
-        <div class="tile" data-widget="color-converter">
-            <h2>Color Converter</h2>
-            <p>Pick colors and convert between formats</p>
-        </div>
-        <div class="tile" data-widget="weather-visualizer">
-            <h2>Weather</h2>
-            <p>Check weather conditions with visual representations</p>
-            <div id="weather-preview"></div>
-        </div>
-    </div>
-    <script src="main.js"></script>
-    <script src="weather-preview.js"></script>
+    <main id="widget-container">
+        <!-- Active widget will be displayed here -->
+    </main>
+    <nav id="widget-nav">
+        <!-- Navigation buttons will be dynamically added here -->
+    </nav>
+    <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+    <script src="app.js" type="module"></script>
 </body>
 </html>
