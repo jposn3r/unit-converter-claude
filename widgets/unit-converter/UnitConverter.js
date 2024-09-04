@@ -69,121 +69,73 @@ export default class UnitConverter {
 
     async mount() {
         this.container.innerHTML = `
-            <div id="unit-converter">
+            <div class="widget-card" id="unit-converter">
                 <h2>Unit Converter</h2>
-                <select id="unitType">
-                    <option value="length">Length</option>
-                    <option value="weight">Weight</option>
-                    <option value="temperature">Temperature</option>
-                    <option value="time">Time</option>
-                    <option value="speed">Speed</option>
-                </select>
-                <input type="number" id="inputValue" placeholder="Enter value">
-                <select id="fromUnit"></select>
-                <select id="toUnit"></select>
-                <button id="convertButton">Convert</button>
-                <div id="result-container">
-                    <div id="result"></div>
-                    <button id="copy-button" class="copy-button" title="Copy result">Copy</button>
+                <div class="converter-content">
+                    <select id="unitType">
+                        <option value="length">Length</option>
+                        <option value="weight">Weight</option>
+                        <option value="temperature">Temperature</option>
+                        <option value="time">Time</option>
+                        <option value="speed">Speed</option>
+                    </select>
+                    <div class="conversion-inputs">
+                        <input type="number" id="inputValue" placeholder="Enter value">
+                        <select id="fromUnit"></select>
+                        <select id="toUnit"></select>
+                    </div>
+                    <button id="convertButton">Convert</button>
+                    <div id="result-container">
+                        <div id="result"></div>
+                        <button id="copy-button" class="copy-button" title="Copy result">Copy</button>
+                    </div>
                 </div>
-            </div>
-            <div id="conversion-history">
-                <h3>Recent Conversions</h3>
-                <ul id="history-list"></ul>
+                <div id="conversion-history">
+                    <h3>Conversion History</h3>
+                    <ul id="history-list"></ul>
+                </div>
             </div>
         `;
 
         this.unitTypeSelect = this.container.querySelector('#unitType');
-        this.inputValue = this.container.querySelector('#inputValue');
         this.fromUnitSelect = this.container.querySelector('#fromUnit');
         this.toUnitSelect = this.container.querySelector('#toUnit');
+        this.inputValue = this.container.querySelector('#inputValue');
         this.convertButton = this.container.querySelector('#convertButton');
         this.resultElement = this.container.querySelector('#result');
         this.copyButton = this.container.querySelector('#copy-button');
         this.historyList = this.container.querySelector('#history-list');
 
         this.unitTypeSelect.addEventListener('change', () => this.populateUnitSelects());
-        this.convertButton.addEventListener('click', () => this.convert(true));
-        this.inputValue.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                this.convert(true);
-            }
-        });
+        this.convertButton.addEventListener('click', () => this.convert());
         this.copyButton.addEventListener('click', () => this.copyToClipboard());
 
         this.populateUnitSelects();
-        this.loadHistory();
-        this.updateHistoryDisplay();
     }
 
     async unmount() {
+        // Remove event listeners
         this.unitTypeSelect.removeEventListener('change', this.populateUnitSelects);
         this.convertButton.removeEventListener('click', this.convert);
-        this.inputValue.removeEventListener('keypress', this.convert);
         this.copyButton.removeEventListener('click', this.copyToClipboard);
     }
 
     populateUnitSelects() {
         const unitType = this.unitTypeSelect.value;
+        const units = this.unitData[unitType].units;
+
         this.fromUnitSelect.innerHTML = '';
         this.toUnitSelect.innerHTML = '';
-        this.inputValue.value = '';
 
-        this.unitData[unitType].units.forEach((unit, index) => {
+        units.forEach(unit => {
             this.fromUnitSelect.innerHTML += `<option value="${unit}">${unit}</option>`;
             this.toUnitSelect.innerHTML += `<option value="${unit}">${unit}</option>`;
         });
 
-        this.fromUnitSelect.selectedIndex = 0;
-        this.toUnitSelect.selectedIndex = Math.min(1, this.unitData[unitType].units.length - 1);
-
-        this.resultElement.textContent = '';
-        this.copyButton.style.display = 'none';
-    }
-
-    loadHistory() {
-        const savedHistory = localStorage.getItem('conversionHistory');
-        if (savedHistory) {
-            this.conversionHistory = JSON.parse(savedHistory);
-            this.updateHistoryDisplay();
+        // Set default 'to' unit to be different from 'from' unit
+        if (units.length > 1) {
+            this.toUnitSelect.selectedIndex = 1;
         }
-    }
-
-    saveHistory() {
-        localStorage.setItem('conversionHistory', JSON.stringify(this.conversionHistory));
-    }
-
-    addToHistory(fromValue, fromUnit, toValue, toUnit, unitType) {
-        this.conversionHistory.unshift({ fromValue: fromValue.toString(), fromUnit, toValue, toUnit, unitType });
-        if (this.conversionHistory.length > this.MAX_HISTORY_ITEMS) {
-            this.conversionHistory.pop();
-        }
-        this.saveHistory();
-        this.updateHistoryDisplay();
-    }
-
-    updateHistoryDisplay() {
-        this.historyList.innerHTML = '';
-        this.conversionHistory.forEach((item, index) => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <span class="history-icon">${this.conversionIcons[item.unitType]}</span>
-                <span class="history-text">${item.fromValue} ${item.fromUnit} = ${item.toValue} ${item.toUnit}</span>
-            `;
-            li.addEventListener('click', () => this.recallConversion(index));
-            this.historyList.appendChild(li);
-        });
-    }
-
-    recallConversion(index) {
-        const item = this.conversionHistory[index];
-        this.unitTypeSelect.value = item.unitType;
-        this.populateUnitSelects();
-        this.fromUnitSelect.value = item.fromUnit;
-        this.toUnitSelect.value = item.toUnit;
-        this.inputValue.value = item.fromValue;
-        this.convert(false);
     }
 
     convert(shouldAddToHistory = true) {
@@ -228,6 +180,35 @@ export default class UnitConverter {
                 this.addToHistory(fromValue, fromUnit, result.toFixed(2), toUnit, unitType);
             }
         }
+    }
+
+    addToHistory(fromValue, fromUnit, toValue, toUnit, unitType) {
+        const historyItem = { fromValue, fromUnit, toValue, toUnit, unitType };
+        this.conversionHistory.unshift(historyItem);
+        if (this.conversionHistory.length > this.MAX_HISTORY_ITEMS) {
+            this.conversionHistory.pop();
+        }
+        this.updateHistoryDisplay();
+    }
+
+    updateHistoryDisplay() {
+        this.historyList.innerHTML = '';
+        this.conversionHistory.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `${this.conversionIcons[item.unitType]} ${item.fromValue} ${item.fromUnit} = ${item.toValue} ${item.toUnit}`;
+            li.addEventListener('click', () => this.recallConversion(index));
+            this.historyList.appendChild(li);
+        });
+    }
+
+    recallConversion(index) {
+        const item = this.conversionHistory[index];
+        this.unitTypeSelect.value = item.unitType;
+        this.populateUnitSelects();
+        this.fromUnitSelect.value = item.fromUnit;
+        this.toUnitSelect.value = item.toUnit;
+        this.inputValue.value = item.fromValue;
+        this.convert(false);
     }
 
     copyToClipboard() {

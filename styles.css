@@ -91,6 +91,49 @@ h1, h2, h3 {
     color: #1a8cff;
 }
 
+/* Common styles for widget cards */
+.widget-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    color: #e0e0e0;
+}
+
+.widget-card h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.widget-card input[type="text"],
+.widget-card input[type="number"],
+.widget-card select,
+.widget-card button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #4a4a4a;
+    border-radius: 4px;
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    font-size: 16px;
+}
+
+.widget-card button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.widget-card button:hover {
+    background-color: #0056b3;
+}
+
+/* Password Generator styles */
 #password-generator {
     max-width: 400px;
     margin: 0 auto;
@@ -123,6 +166,7 @@ h1, h2, h3 {
     border: none;
     border-radius: 0 4px 4px 0;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 #copy-password:hover {
@@ -134,29 +178,26 @@ h1, h2, h3 {
     margin-bottom: 20px;
 }
 
-.tab-button {
+.tab {
     flex: 1;
-    padding: 10px 0;
-    background-color: transparent;
-    border: none;
+    padding: 10px;
+    text-align: center;
+    background-color: #3a3a3a;
+    color: #e0e0e0;
     cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    color: #f9f9f9;
-    transition: color 0.3s, border-bottom 0.3s;
-    border-bottom: 3px solid transparent;
+    transition: background-color 0.3s;
 }
 
-.tab-button.active {
-    border-bottom: 3px solid #ffffff;
+.tab:first-child {
+    border-radius: 4px 0 0 4px;
 }
 
-.tab-content {
-    display: none;
+.tab:last-child {
+    border-radius: 0 4px 4px 0;
 }
 
-.tab-content.active {
-    display: block;
+.tab.active {
+    background-color: #007bff;
 }
 
 .options {
@@ -165,31 +206,20 @@ h1, h2, h3 {
 
 .option {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.option input[type="checkbox"] {
+    margin-right: 10px;
 }
 
 .option label {
     flex-grow: 1;
 }
 
-.option input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-}
-
-.option input[type="number"] {
+#length {
     width: 60px;
-    padding: 5px;
-    border: 1px solid #4a4a4a;
-    border-radius: 4px;
-    background-color: #3a3a3a;
-    color: #e0e0e0;
-}
-
-select {
-    width: 100%;
     padding: 5px;
     border: 1px solid #4a4a4a;
     border-radius: 4px;
@@ -212,6 +242,7 @@ select {
     background-color: #218838;
 }
 
+/* Weather preview styles */
 #weather-preview {
     text-align: center;
     margin-top: 10px;
@@ -231,6 +262,7 @@ select {
     font-size: 14px;
 }
 
+/* Grid styles */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -269,6 +301,139 @@ select {
     margin-bottom: 5px;
 }
 
+/* Unit Converter specific styles */
+#unit-converter {
+    composes: widget-card;
+}
+
+#conversion-history {
+    margin-top: 20px;
+}
+
+#history-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#history-list li {
+    background-color: #3a3a3a;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#history-list li:hover {
+    background-color: #4a4a4a;
+}
+
+.history-icon {
+    margin-right: 10px;
+}
+
+/* Color Converter specific styles */
+#color-converter {
+    composes: widget-card;
+}
+
+.color-input,
+.color-output {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.color-input label,
+.color-output label {
+    flex: 1;
+    margin-right: 10px;
+}
+
+#colorPicker {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.widget-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    color: #e0e0e0;
+}
+
+.widget-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.converter-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.conversion-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+.color-outputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#result-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+#copy-button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#copy-button:hover {
+    background-color: #0056b3;
+}
+
+#conversion-history {
+    margin-top: 20px;
+}
+
+#history-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#history-list li {
+    background-color: #3a3a3a;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#history-list li:hover {
+    background-color: #4a4a4a;
+}
+
+/* Media queries for responsive design */
 @media (max-width: 768px) {
     body {
         overflow-x: hidden;
@@ -277,16 +442,16 @@ select {
     #widget-nav {
         position: fixed;
         top: 0;
-        right: -100%;  /* Changed from -300px to -100% */
-        width: 80%;    /* Changed from 300px to 80% */
-        max-width: 300px; /* Added max-width */
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
         height: 100vh;
         flex-direction: column;
         justify-content: flex-start;
         padding-top: 60px;
         transition: right 0.3s ease;
         z-index: 999;
-        background-color: #1e1e1e; /* Added background color */
+        background-color: #1e1e1e;
     }
 
     #widget-nav.open {

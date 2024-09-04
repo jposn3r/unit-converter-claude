@@ -5,23 +5,27 @@ export default class ColorConverter {
 
     async mount() {
         this.container.innerHTML = `
-            <div id="color-converter">
+            <div class="widget-card" id="color-converter">
                 <h2>Color Converter</h2>
-                <div class="color-input">
-                    <label for="colorPicker">Choose a color:</label>
-                    <input type="color" id="colorPicker" value="#000000">
-                </div>
-                <div class="color-output">
-                    <label for="hex">HEX:</label>
-                    <input type="text" id="hex" readonly>
-                </div>
-                <div class="color-output">
-                    <label for="rgb">RGB:</label>
-                    <input type="text" id="rgb" readonly>
-                </div>
-                <div class="color-output">
-                    <label for="hsl">HSL:</label>
-                    <input type="text" id="hsl" readonly>
+                <div class="converter-content">
+                    <div class="color-input">
+                        <label for="colorPicker">Choose a color:</label>
+                        <input type="color" id="colorPicker" value="#000000">
+                    </div>
+                    <div class="color-outputs">
+                        <div class="color-output">
+                            <label for="hex">HEX:</label>
+                            <input type="text" id="hex" readonly>
+                        </div>
+                        <div class="color-output">
+                            <label for="rgb">RGB:</label>
+                            <input type="text" id="rgb" readonly>
+                        </div>
+                        <div class="color-output">
+                            <label for="hsl">HSL:</label>
+                            <input type="text" id="hsl" readonly>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
