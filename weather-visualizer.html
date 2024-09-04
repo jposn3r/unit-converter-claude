@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="weather-visualizer.css">
+</head>
+<body>
+    <a href="index.html" class="back-button">← Widgets</a>
+    <div id="weather-visualizer">
+        <h2>Weather Visualizer</h2>
+        <div id="location-input">
+            <input type="text" id="city-input" placeholder="Enter city name">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="current-weather">
+            <h3>Current Weather</h3>
+            <div id="weather-icon"></div>
+            <div id="temperature"></div>
+            <div id="description"></div>
+        </div>
+        <div id="forecast">
+            <h3>5-Day Forecast</h3>
+            <div id="forecast-container"></div>
+        </div>
+    </div>
+    <script src="weather-visualizer.js"></script>
+</body>
+</html>
